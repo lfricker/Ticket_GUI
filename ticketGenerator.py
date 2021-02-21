@@ -13,11 +13,14 @@ class ticketGenerator():
       self.dpiCorrection = int(300 / 72)
       self.font = ImageFont.truetype('arial', 14 * self.dpiCorrection)
       self.black = (0,0,0)
+      self.path_to_template = ""
 
    def setCardsPerPage(self, x, y):
       self.x_cards = x
       self.y_cards = y
       self.cards_per_page = self.x_cards * self.y_cards
+      if(self.path_to_template != ""):
+         self.setBaseImage(self.path_to_template)
 
 
    def setDate(self, date):

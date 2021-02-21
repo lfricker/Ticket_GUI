@@ -58,3 +58,4 @@ class mySettings():
                      }
       with open(path, 'w') as outfile:
          json.dump(newSettings, outfile)
+      self.openSettings(path)

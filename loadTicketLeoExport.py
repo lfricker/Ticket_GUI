@@ -66,7 +66,7 @@ class loadTicketLeoExport():
 
 
 
-path = "Z:/Desktop/Programming Playground/Python Playground/Theater/Ticket_Generator/input/Das Klassentreffen-11205 (2).xlsx"
+path = "D:\Programming Playground\Python Playground\Theater GUI\Samples\Das-Klassentreffen.xlsx"
 
 dataloader = loadTicketLeoExport()
 dataloader.openExport(path)

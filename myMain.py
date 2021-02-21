@@ -1,3 +1,14 @@
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
+#
+#     autor       :  luka fricker
+#     date        :  21.02.2021
+#     description :  pyqt5 program to create ticket sheets of a template
+#                    combined with a export file from ticketleo
+#
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
+
+
+
 from mainWindow import Ui_MainWindow
 from mySettings import mySettings
 from loadTicketLeoExport import loadTicketLeoExport
@@ -17,15 +28,17 @@ class myMain(Ui_MainWindow):
       self.creator = ticketGenerator()
       self.creator.setDate("00.00.")
       self.dataBrowser = loadTicketLeoExport()
-#      self.creator.setCardsPerPage(4,4)
       self.creator.setCardsPerPage(3,5)
       self.empty_seats = 0
       self.full_seats  = 0
       self.extra_seats = 0
       self.currentSetting = "name"
+      self.dataAvailable = False
+      self.templateAvailable = False
+      self.settingsAvailable = False
       self.init()
 
-
+# done.
    def init(self):
       self.app = QtWidgets.QApplication(sys.argv)
       self.MainWindow = QtWidgets.QMainWindow()
@@ -41,12 +54,13 @@ class myMain(Ui_MainWindow):
       self.pb_down.clicked.connect(self.pb_down_clicked)
       self.pb_left.clicked.connect(self.pb_left_clicked)
       self.pb_right.clicked.connect(self.pb_right_clicked)
+      self.list_toEdit.itemClicked.connect(self.selection_changed)
 
       # show the window
       self.MainWindow.show()
       sys.exit(self.app.exec_())
 
-
+# done.
    def pb_input_clicked(self):
       print("pb_input_clicked")
 
@@ -54,6 +68,7 @@ class myMain(Ui_MainWindow):
       fname = QFileDialog.getOpenFileName(self.MainWindow, 'Open File', self.te_input.toPlainText(), 'Excel Files (*.xlsx)')
 
       if fname[0] != '':
+         self.dataAvailable = True
          self.te_input.setText(fname[0])
          # tell the data browser where to read the file contents
          self.dataBrowser.openExport(fname[0])
@@ -65,24 +80,37 @@ class myMain(Ui_MainWindow):
          self.tb_anzahl.setText(str(self.dataBrowser.getFullSeats()))
          self.full_seats  = self.dataBrowser.getFullSeats()
 
-
+# done
    def pb_template_clicked(self):
       print("pb_template_clicked")
-
       fname = QFileDialog.getOpenFileName(self.MainWindow, 'Open File', './Theater GUI/Samples', 'PNG (*.png)')
-
       if fname[0] != '':
+         self.templateAvailable = True
          self.te_template.setText(fname[0])
          self.creator.setBaseImage(fname[0])
          self.update_preview()
 
-
+# done
    def pb_outline_clicked(self):
       fname = QFileDialog.getOpenFileName(self.MainWindow, 'Open File', './Theater GUI/Samples', 'Settings (*.json)')
       if fname[0] != '':
+         self.settingsAvailable = True
          self.te_output.setText(fname[0])
          self.settings.openSettings(fname[0])
          self.creator.setPositions(self.settings)
+         self.update_preview()
+
+# done
+   def pb_new_outline_clicked(self):
+      print("pb_new_outline_clicked clicked")
+      fname = QFileDialog.getSaveFileName(self.MainWindow, 'Save File', './Theater GUI/Samples', 'Settigns (*.json)')
+
+      if fname[0] != '':
+         self.settingsAvailable = True
+         self.settings.createSettings(fname[0])
+         self.te_output.setText(fname[0])
+         self.creator.setPositions(self.settings)
+         self.update_preview()
 
 
    def pb_start_clicked(self):
@@ -91,68 +119,86 @@ class myMain(Ui_MainWindow):
       fname = QFileDialog.getSaveFileName(self.MainWindow, 'Save File', './Theater GUI/Samples', 'PDF (*.pdf)')
 
       if fname[0] != '':
-         self.l_status.setText("Einlesen")
-         self.extra_seats = int(self.te_bus.toPlainText())
-         print("Besetzt: ", self.full_seats)
-         print("Frei: "   , self.empty_seats)
-         print("Bus: "    , self.extra_seats)
-         self.creator.setCardsPerPage(int(self.te_x.toPlainText()), int(self.te_y.toPlainText()))
+         if self.settingsAvailable == True and self.dataAvailable == True and self.templateAvailable == True:
+            self.update_status("Reading")
+            self.extra_seats = int(self.te_bus.toPlainText())
+            print("Besetzt: ", self.full_seats)
+            print("Frei: "   , self.empty_seats)
+            print("Bus: "    , self.extra_seats)
+            self.creator.setCardsPerPage(int(self.te_x.toPlainText()), int(self.te_y.toPlainText()))
 
-         # create the tickets
-         tickets = []
-         for i in range(self.empty_seats + self.full_seats):
-            tickets.append(self.creator.createCard(self.dataBrowser.getCustomer(i)))
-         for i in range(self.extra_seats):
-            customer = ("Bus " + str(i+1), "")
-            tickets.append(self.creator.createCard(customer))
-         self.l_status.setText("Creating")
+            # create the tickets
+            tickets = []
+            for i in range(self.empty_seats + self.full_seats):
+               tickets.append(self.creator.createCard(self.dataBrowser.getCustomer(i)))
+               self.update_status(("Creating\n" + str(i) + " of " + str(self.empty_seats + self.full_seats)))
+            for i in range(self.extra_seats):
+               customer = ("Bus " + str(i+1), "")
+               tickets.append(self.creator.createCard(customer))
+               self.update_status(("Creating\n" + str(i) + " of " + str(self.extra_seats)))
+            self.update_status("Storing")
 
-         # save the tickets
-         self.creator.createOutput(tickets, fname[0])
+            # save the tickets
+            self.creator.createOutput(tickets, fname[0])
+            self.update_status("Done")
 
-
-         self.l_status.setText("Fertig")
-
-
-   def pb_new_outline_clicked(self):
-      print("pb_new_outline_clicked clicked")
-      fname = QFileDialog.getSaveFileName(self.MainWindow, 'Save File', './Theater GUI/Samples', 'Settigns (*.json)')
-
-      if fname[0] != '':
-         self.settings.createSettings(fname[0])
-
+# done
    def pb_up_clicked(self):
       print("pb_up clicked")
-      self.settings.setItemValue("positionen", self.settings.getItemValue("positionen")[self.currentSetting]["x"] + int(self.te_step.toPlainText()))
-      self.update_preview()
+      if self.settingsAvailable:
+         self.change_setting("y", "sub")
+         self.update_preview()
 
+# done
    def pb_down_clicked(self):
       print("pb_down clicked")
-      self.settings.setItemValue("positionen", self.settings.getItemValue("positionen")[self.currentSetting]["x"] - int(self.te_step.toPlainText()))
-      self.update_preview()
+      if self.settingsAvailable:
+         self.change_setting("y", "add")
+         self.update_preview()
 
+# done
    def pb_left_clicked(self):
       print("pb_left clicked")
-      self.settings.setItemValue("positionen", self.settings.getItemValue("positionen")[self.currentSetting]["y"] - int(self.te_step.toPlainText()))
-      self.update_preview()
+      if self.settingsAvailable:
+         self.change_setting("x", "sub")
+         self.update_preview()
 
+# done
    def pb_right_clicked(self):
       print("pb_right clicked")
-      self.settings.setItemValue("positionen", self.settings.getItemValue("positionen")[self.currentSetting]["y"] + int(self.te_step.toPlainText()))
+      if self.settingsAvailable:
+         self.change_setting("x", "add")
+         self.update_preview()
+
+   def change_setting(self, axis, operator):
+      toEdit = self.settings.getItemValue("positionen")
+      if operator == "add":
+         toEdit[self.currentSetting][axis] = toEdit[self.currentSetting][axis] + int(self.te_step.toPlainText())
+      else:
+         toEdit[self.currentSetting][axis] = toEdit[self.currentSetting][axis] - int(self.te_step.toPlainText())
+      self.settings.setItemValue("positionen", toEdit)
       self.settings.saveSettings()
-      self.update_preview()
 
    def update_preview(self):
-      self.creator.setPositions(self.settings)
-      template = self.creator.createCard(("000", "Max Musterman"))
-      scaleFactor = template.width / 500
+      if self.settingsAvailable == True and self.templateAvailable == True:
+         self.creator.setPositions(self.settings)
+         template = self.creator.createCard(("000", "Max Musterman"))
+         scaleFactor = template.width / 500
+         # convert the picture to pixmap and resize the label
+         qim = ImageQt(template)
+         pix = QtGui.QPixmap.fromImage(qim)
+         self.ticket_preview.resize(template.width / scaleFactor, template.height / scaleFactor)
+         self.ticket_preview.setPixmap(QtGui.QPixmap(pix))
 
-      # convert the picture to pixmap and resize the label
-      qim = ImageQt(template)
-      pix = QtGui.QPixmap.fromImage(qim)
-      self.ticket_preview.resize(template.width / scaleFactor, template.height / scaleFactor)
-      self.ticket_preview.setPixmap(QtGui.QPixmap(pix))
+   def selection_changed(self, item):
+      self.currentSetting = item.text()
+      print("selected: ", self.currentSetting)
 
+   def update_status(self, text):
+
+      self.l_status.setText(text)
+      self.l_status.adjustSize()
+      QApplication.processEvents()
 
 
 myApp = myMain()
