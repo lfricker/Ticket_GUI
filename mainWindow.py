@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '.\mainLayout.ui'
+# Form implementation generated from reading ui file 'mainLayout.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.2
 #
@@ -14,7 +14,17 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1081, 708)
+        MainWindow.resize(1100, 800)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
+        MainWindow.setSizePolicy(sizePolicy)
+        MainWindow.setMinimumSize(QtCore.QSize(1100, 800))
+        MainWindow.setMaximumSize(QtCore.QSize(1100, 800))
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("../../../InkscapeWorkspace/TheaterLogo_icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        MainWindow.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.pb_input = QtWidgets.QPushButton(self.centralwidget)
@@ -25,18 +35,32 @@ class Ui_MainWindow(object):
         self.pb_input.setObjectName("pb_input")
         self.te_input = QtWidgets.QTextEdit(self.centralwidget)
         self.te_input.setGeometry(QtCore.QRect(30, 20, 621, 41))
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.te_input.setFont(font)
         self.te_input.setObjectName("te_input")
         self.tb_anzahl = QtWidgets.QTextBrowser(self.centralwidget)
         self.tb_anzahl.setGeometry(QtCore.QRect(210, 200, 121, 51))
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.tb_anzahl.setFont(font)
         self.tb_anzahl.setObjectName("tb_anzahl")
         self.l_anzahl = QtWidgets.QLabel(self.centralwidget)
         self.l_anzahl.setGeometry(QtCore.QRect(30, 200, 171, 51))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.l_anzahl.sizePolicy().hasHeightForWidth())
+        self.l_anzahl.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setPointSize(14)
         self.l_anzahl.setFont(font)
         self.l_anzahl.setObjectName("l_anzahl")
         self.te_leer = QtWidgets.QTextEdit(self.centralwidget)
         self.te_leer.setGeometry(QtCore.QRect(210, 260, 121, 51))
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.te_leer.setFont(font)
         self.te_leer.setObjectName("te_leer")
         self.l_leer = QtWidgets.QLabel(self.centralwidget)
         self.l_leer.setGeometry(QtCore.QRect(30, 260, 171, 51))
@@ -61,6 +85,9 @@ class Ui_MainWindow(object):
         self.pb_start.setObjectName("pb_start")
         self.te_output = QtWidgets.QTextEdit(self.centralwidget)
         self.te_output.setGeometry(QtCore.QRect(30, 120, 621, 41))
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.te_output.setFont(font)
         self.te_output.setObjectName("te_output")
         self.pb_outline = QtWidgets.QPushButton(self.centralwidget)
         self.pb_outline.setGeometry(QtCore.QRect(660, 120, 101, 41))
@@ -70,6 +97,9 @@ class Ui_MainWindow(object):
         self.pb_outline.setObjectName("pb_outline")
         self.te_template = QtWidgets.QTextEdit(self.centralwidget)
         self.te_template.setGeometry(QtCore.QRect(30, 70, 621, 41))
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.te_template.setFont(font)
         self.te_template.setObjectName("te_template")
         self.pb_template = QtWidgets.QPushButton(self.centralwidget)
         self.pb_template.setGeometry(QtCore.QRect(660, 70, 101, 41))
@@ -80,7 +110,7 @@ class Ui_MainWindow(object):
         self.ticket_preview = QtWidgets.QLabel(self.centralwidget)
         self.ticket_preview.setGeometry(QtCore.QRect(420, 350, 461, 261))
         self.ticket_preview.setText("")
-        self.ticket_preview.setPixmap(QtGui.QPixmap(".\\../Theater/Ticket_Generator/input/ticketImage.png"))
+        self.ticket_preview.setPixmap(QtGui.QPixmap("../Theater/Ticket_Generator/input/ticketImage.png"))
         self.ticket_preview.setScaledContents(True)
         self.ticket_preview.setObjectName("ticket_preview")
         self.l_status = QtWidgets.QLabel(self.centralwidget)
@@ -151,7 +181,7 @@ class Ui_MainWindow(object):
         self.pb_new_outline.setObjectName("pb_new_outline")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1081, 21))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1100, 21))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -172,16 +202,41 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.pb_input.setText(_translate("MainWindow", "Input"))
+        self.te_input.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:14pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"right\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+        self.tb_anzahl.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:14pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8.25pt;\"><br /></p></body></html>"))
         self.l_anzahl.setText(_translate("MainWindow", "Anzahl Tickets:"))
+        self.te_leer.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:14pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8.25pt;\"><br /></p></body></html>"))
         self.l_leer.setText(_translate("MainWindow", "Leere Plätze:"))
         self.l_bus.setText(_translate("MainWindow", "Bus Plätze:"))
         self.te_bus.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;\">0</span></p></body></html>"))
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;\">0</span></p></body></html>"))
         self.pb_start.setText(_translate("MainWindow", "Start"))
+        self.te_output.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:14pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"justify\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
         self.pb_outline.setText(_translate("MainWindow", "Outline"))
+        self.te_template.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:14pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"right\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
         self.pb_template.setText(_translate("MainWindow", "Template"))
         self.l_status.setText(_translate("MainWindow", "-status-"))
         __sortingEnabled = self.list_toEdit.isSortingEnabled()
@@ -213,7 +268,7 @@ class Ui_MainWindow(object):
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:14pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">5</p></body></html>"))
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">5</p></body></html>"))
         self.pb_new_outline.setText(_translate("MainWindow", "New"))
 
 
