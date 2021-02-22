@@ -112,7 +112,7 @@ class myMain(Ui_MainWindow):
          self.creator.setPositions(self.settings)
          self.update_preview()
 
-
+# memory problems, jedes mal + 700MB
    def pb_start_clicked(self):
       print("pb_outline_clicked")
       # open file dialog
@@ -141,6 +141,10 @@ class myMain(Ui_MainWindow):
             # save the tickets
             self.creator.createOutput(tickets, fname[0])
             self.update_status("Done")
+
+            for t in tickets:
+               t.close()
+            del tickets[:]
 
 # done
    def pb_up_clicked(self):

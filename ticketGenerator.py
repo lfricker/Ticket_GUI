@@ -75,3 +75,7 @@ class ticketGenerator():
 
       # save output to pdf
       pages[0].save(path, save_all=True, append_images=pages[1:], dpi=(300,300))
+
+      for p in pages:
+         p.close()
+      del pages[:]
