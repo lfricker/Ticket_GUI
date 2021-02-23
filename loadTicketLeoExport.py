@@ -62,13 +62,3 @@ class loadTicketLeoExport():
       else:
          return ("", 0)
 
-
-
-
-
-path = "D:\Programming Playground\Python Playground\Theater GUI\Samples\Das-Klassentreffen.xlsx"
-
-dataloader = loadTicketLeoExport()
-dataloader.openExport(path)
-print(dataloader.getFullSeats())
-print(dataloader.getEmptySeats())
