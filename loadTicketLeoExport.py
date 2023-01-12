@@ -27,7 +27,8 @@ class loadTicketLeoExport():
          name = str(surname[i]) + " " + str(prename[i])
          if name == "nan nan":
             name = ""
-         self.customers.append((seat[i], name))
+         else:
+            self.customers.append((seat[i], name))
 
 
    def getDate(self):

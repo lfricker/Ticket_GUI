@@ -51,6 +51,12 @@ class ticketGenerator():
       editable.text(self.datePos,  str(self.date),    self.black, font = self.font)
       return card
 
+   def createBlanco(self):
+      # load base image and return as blanco card
+      card = Image.open(self.path_to_template)
+      editable = ImageDraw.Draw(card)
+      return card
+
    def createOutput(self, tickets, path):
       pages = []
       # get page cnt

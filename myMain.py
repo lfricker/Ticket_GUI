@@ -11,7 +11,7 @@
 
 from mainWindow import Ui_MainWindow
 from mySettings import mySettings
-from loadTicketLeoExport import loadTicketLeoExport
+from loadTicketLeoExport import loadTicketLeoExport as leoImport
 from ticketGenerator import ticketGenerator
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import *
@@ -27,7 +27,7 @@ class myMain(Ui_MainWindow):
       self.settings = mySettings()
       self.creator = ticketGenerator()
       self.creator.setDate("00.00.")
-      self.dataBrowser = loadTicketLeoExport()
+      self.dataBrowser = leoImport()
       self.creator.setCardsPerPage(3,5)
       self.empty_seats = 0
       self.full_seats  = 0
@@ -112,7 +112,6 @@ class myMain(Ui_MainWindow):
          self.creator.setPositions(self.settings)
          self.update_preview()
 
-# memory problems, jedes mal + 700MB
    def pb_start_clicked(self):
       print("pb_outline_clicked")
       # open file dialog
@@ -124,7 +123,7 @@ class myMain(Ui_MainWindow):
             self.extra_seats = int(self.te_bus.toPlainText())
             print("Besetzt: ", self.full_seats)
             print("Frei: "   , self.empty_seats)
-            print("Bus: "    , self.extra_seats)
+            print("Blanco: " , self.extra_seats)
             self.creator.setCardsPerPage(int(self.te_x.toPlainText()), int(self.te_y.toPlainText()))
 
             # create the tickets
@@ -133,8 +132,7 @@ class myMain(Ui_MainWindow):
                tickets.append(self.creator.createCard(self.dataBrowser.getCustomer(i)))
                self.update_status(("Creating\n" + str(i) + " of " + str(self.empty_seats + self.full_seats)))
             for i in range(self.extra_seats):
-               customer = ("Bus " + str(i+1), "")
-               tickets.append(self.creator.createCard(customer))
+               tickets.append(self.creator.createBlanco())
                self.update_status(("Creating\n" + str(i) + " of " + str(self.extra_seats)))
             self.update_status("Storing")
 
