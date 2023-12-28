@@ -18,17 +18,18 @@ from PyQt5.QtWidgets import *
 import sys
 from PIL import Image, ImageFont, ImageDraw
 from PIL.ImageQt import ImageQt
-
+import os
 
 class myMain(Ui_MainWindow):
 
    def __init__(self):
+      self.cwd = os.getcwd()
       super(myMain, self).__init__()
       self.settings = mySettings()
       self.creator = ticketGenerator()
       self.creator.setDate("00.00.")
       self.dataBrowser = leoImport()
-      self.creator.setCardsPerPage(3,5)
+      self.creator.setCardsPerPage(2,6)
       self.empty_seats = 0
       self.full_seats  = 0
       self.extra_seats = 0
@@ -38,7 +39,6 @@ class myMain(Ui_MainWindow):
       self.settingsAvailable = False
       self.init()
 
-# done.
    def init(self):
       self.app = QtWidgets.QApplication(sys.argv)
       self.MainWindow = QtWidgets.QMainWindow()
@@ -50,22 +50,22 @@ class myMain(Ui_MainWindow):
       self.pb_start.clicked.connect(self.pb_start_clicked)
       self.pb_outline.clicked.connect(self.pb_outline_clicked)
       self.pb_new_outline.clicked.connect(self.pb_new_outline_clicked)
-      self.pb_up.clicked.connect(self.pb_up_clicked)
-      self.pb_down.clicked.connect(self.pb_down_clicked)
-      self.pb_left.clicked.connect(self.pb_left_clicked)
-      self.pb_right.clicked.connect(self.pb_right_clicked)
+      self.pb_up.clicked.connect(lambda state, axis = "y", dir = "sub" : self.pb_dir_clicked(axis, dir))
+      self.pb_down.clicked.connect(lambda state, axis = "y", dir = "add" : self.pb_dir_clicked(axis, dir))
+      self.pb_left.clicked.connect(lambda state, axis = "x", dir = "sub" : self.pb_dir_clicked(axis, dir))
+      self.pb_right.clicked.connect(lambda state, axis = "x", dir = "add" : self.pb_dir_clicked(axis, dir))
+      self.pb_rotate.clicked.connect(lambda state, axis = "r", dir = "add" : self.pb_dir_clicked(axis, dir))
       self.list_toEdit.itemClicked.connect(self.selection_changed)
 
       # show the window
       self.MainWindow.show()
       sys.exit(self.app.exec_())
 
-# done.
    def pb_input_clicked(self):
       print("pb_input_clicked")
 
       # get path to the ticketleo export file
-      fname = QFileDialog.getOpenFileName(self.MainWindow, 'Open File', self.te_input.toPlainText(), 'Excel Files (*.xlsx)')
+      fname = QFileDialog.getOpenFileName(self.MainWindow, 'Open File', os.path.join(self.cwd, "Samples"), 'Excel Files (*.xlsx)')
 
       if fname[0] != '':
          self.dataAvailable = True
@@ -80,19 +80,17 @@ class myMain(Ui_MainWindow):
          self.tb_anzahl.setText(str(self.dataBrowser.getFullSeats()))
          self.full_seats  = self.dataBrowser.getFullSeats()
 
-# done
    def pb_template_clicked(self):
       print("pb_template_clicked")
-      fname = QFileDialog.getOpenFileName(self.MainWindow, 'Open File', './Theater GUI/Samples', 'PNG (*.png)')
+      fname = QFileDialog.getOpenFileName(self.MainWindow, 'Open File', os.path.join(self.cwd,"Samples"), 'PNG (*.png)')
       if fname[0] != '':
          self.templateAvailable = True
          self.te_template.setText(fname[0])
          self.creator.setBaseImage(fname[0])
          self.update_preview()
 
-# done
    def pb_outline_clicked(self):
-      fname = QFileDialog.getOpenFileName(self.MainWindow, 'Open File', './Theater GUI/Samples', 'Settings (*.json)')
+      fname = QFileDialog.getOpenFileName(self.MainWindow, 'Open File', os.path.join(self.cwd, "Samples"), 'Settings (*.json)')
       if fname[0] != '':
          self.settingsAvailable = True
          self.te_output.setText(fname[0])
@@ -100,10 +98,9 @@ class myMain(Ui_MainWindow):
          self.creator.setPositions(self.settings)
          self.update_preview()
 
-# done
    def pb_new_outline_clicked(self):
       print("pb_new_outline_clicked clicked")
-      fname = QFileDialog.getSaveFileName(self.MainWindow, 'Save File', './Theater GUI/Samples', 'Settigns (*.json)')
+      fname = QFileDialog.getSaveFileName(self.MainWindow, 'Save File', os.path.join(self.cwd, "Samples"), 'Settigns (*.json)')
 
       if fname[0] != '':
          self.settingsAvailable = True
@@ -115,16 +112,16 @@ class myMain(Ui_MainWindow):
    def pb_start_clicked(self):
       print("pb_outline_clicked")
       # open file dialog
-      fname = QFileDialog.getSaveFileName(self.MainWindow, 'Save File', './Theater GUI/Samples', 'PDF (*.pdf)')
+      fname = QFileDialog.getSaveFileName(self.MainWindow, 'Save File', os.path.join(self.cwd, "Samples"), 'PDF (*.pdf)')
 
       if fname[0] != '':
          if self.settingsAvailable == True and self.dataAvailable == True and self.templateAvailable == True:
             self.update_status("Reading")
-            self.extra_seats = int(self.te_bus.toPlainText())
+            self.extra_seats = int(self.te_bus.text())
             print("Besetzt: ", self.full_seats)
             print("Frei: "   , self.empty_seats)
             print("Blanco: " , self.extra_seats)
-            self.creator.setCardsPerPage(int(self.te_x.toPlainText()), int(self.te_y.toPlainText()))
+            self.creator.setCardsPerPage(int(self.te_x.text()), int(self.te_y.text()))
 
             # create the tickets
             tickets = []
@@ -144,42 +141,24 @@ class myMain(Ui_MainWindow):
                t.close()
             del tickets[:]
 
-# done
-   def pb_up_clicked(self):
-      print("pb_up clicked")
-      if self.settingsAvailable:
-         self.change_setting("y", "sub")
-         self.update_preview()
-
-# done
-   def pb_down_clicked(self):
-      print("pb_down clicked")
-      if self.settingsAvailable:
-         self.change_setting("y", "add")
-         self.update_preview()
-
-# done
-   def pb_left_clicked(self):
-      print("pb_left clicked")
-      if self.settingsAvailable:
-         self.change_setting("x", "sub")
-         self.update_preview()
-
-# done
-   def pb_right_clicked(self):
-      print("pb_right clicked")
-      if self.settingsAvailable:
-         self.change_setting("x", "add")
-         self.update_preview()
+   def pb_dir_clicked(self, axis, dir):
+      print("pb clicked with ", axis, dir)
+      self.change_setting(axis, dir)
+      self.update_preview()
 
    def change_setting(self, axis, operator):
-      toEdit = self.settings.getItemValue("positionen")
-      if operator == "add":
-         toEdit[self.currentSetting][axis] = toEdit[self.currentSetting][axis] + int(self.te_step.toPlainText())
-      else:
-         toEdit[self.currentSetting][axis] = toEdit[self.currentSetting][axis] - int(self.te_step.toPlainText())
-      self.settings.setItemValue("positionen", toEdit)
-      self.settings.saveSettings()
+      try:
+         toEdit = self.settings.getItemValue("positionen")
+         if operator == "add":
+            toEdit[self.currentSetting][axis] += int(self.te_step.text())
+         else:
+            toEdit[self.currentSetting][axis] -= int(self.te_step.text())
+         self.settings.setItemValue("positionen", toEdit)
+         self.settings.saveSettings()
+      except TypeError:
+         print("Invalid field selected")
+      except Exception as e:
+         print(type(e), e)
 
    def update_preview(self):
       if self.settingsAvailable == True and self.templateAvailable == True:
@@ -197,12 +176,9 @@ class myMain(Ui_MainWindow):
       print("selected: ", self.currentSetting)
 
    def update_status(self, text):
-
       self.l_status.setText(text)
       self.l_status.adjustSize()
       QApplication.processEvents()
 
 
 myApp = myMain()
-
-input("prompt: ")

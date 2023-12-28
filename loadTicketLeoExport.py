@@ -13,7 +13,7 @@ class loadTicketLeoExport():
          self.exportAvailable = True
       # get the date from the excel
       head = pd.read_excel (path, sheet_name=0).columns[0]
-      self.date = str(re.findall("\d{2}.\d{2}.", str(re.findall("\d{2}.\d{2}.\d{4}", head)[0]))[0])
+      self.date = str(re.findall("\d{2}.\d{2}.\d{4}", head)[0])
 
       # load excle file. Cut of the first two lines, not needed
       ex = pd.read_excel (path, sheet_name=0, skiprows=2)

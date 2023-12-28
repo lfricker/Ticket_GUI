@@ -44,15 +44,18 @@ class mySettings():
                         "positionen":  {
                            "name": {
                               "x": 0,
-                              "y": 0
+                              "y": 0,
+                              "r": 0
                            },
                            "platz": {
                               "x": 0,
-                              "y": 0
+                              "y": 0,
+                              "r": 0
                            },
                            "datum": {
                               "x": 0,
-                              "y": 0
+                              "y": 0,
+                              "r": 0
                            }
                         }
                      }

@@ -1,4 +1,4 @@
-from PIL import Image, ImageFont, ImageDraw
+from PIL import Image, ImageFont, ImageDraw, ImageOps
 from PIL.ImageQt import ImageQt
 
 from mySettings import mySettings
@@ -22,7 +22,6 @@ class ticketGenerator():
       if(self.path_to_template != ""):
          self.setBaseImage(self.path_to_template)
 
-
    def setDate(self, date):
       self.date = date
 
@@ -30,7 +29,9 @@ class ticketGenerator():
       self.namePos  = (int(positions.getItemValue("positionen")["name"]["x"])  * self.dpiCorrection, int(positions.getItemValue("positionen")["name"]["y"])  * self.dpiCorrection)
       self.platzPos = (int(positions.getItemValue("positionen")["platz"]["x"]) * self.dpiCorrection, int(positions.getItemValue("positionen")["platz"]["y"]) * self.dpiCorrection)
       self.datePos  = (int(positions.getItemValue("positionen")["datum"]["x"]) * self.dpiCorrection, int(positions.getItemValue("positionen")["datum"]["y"]) * self.dpiCorrection)
-
+      self.nameRot =  int(positions.getItemValue("positionen")["name"]["r"]) 
+      self.platzRot = int(positions.getItemValue("positionen")["platz"]["r"])
+      self.dateRot =  int(positions.getItemValue("positionen")["datum"]["r"])
 
    def setBaseImage(self, path_to_img):
       template = Image.open(path_to_img)
@@ -40,6 +41,14 @@ class ticketGenerator():
       self.x_spacing = self.width  / self.x_cards
       self.y_spacing = self.height / self.y_cards
 
+   def __add_attribute(self, card : Image, value : str, position : tuple, rotation : int):
+      # write the value to a temp text to rotate it before adding to the base
+      txt = Image.new('L', (800, 50)) # 800 x 50 is the max size for text fileds... maybe do this according to text size
+      d = ImageDraw.Draw(txt)
+      d.text( (0,0), str(value), font = self.font, fill=255)
+      w = txt.rotate(rotation, expand=1)
+      card.paste(ImageOps.colorize(w, (0,0,0), (0, 0, 0)), position, w)
+
    def createCard(self, customer):
       # load base image and make editable
       print(customer)
@@ -48,7 +57,10 @@ class ticketGenerator():
       # add the data to the ticket and return it
       editable.text(self.namePos,  str(customer[1]),  self.black, font = self.font)
       editable.text(self.platzPos, str(customer[0]),  self.black, font = self.font)
-      editable.text(self.datePos,  str(self.date),    self.black, font = self.font)
+
+      self.__add_attribute(card=card, value=str(customer[1]),  position=self.namePos,  rotation=self.nameRot)
+      self.__add_attribute(card=card, value=str(customer[0]),  position=self.platzPos, rotation=self.platzRot)
+      self.__add_attribute(card=card, value=self.date,         position=self.datePos,  rotation=self.dateRot)
       return card
 
    def createBlanco(self):
