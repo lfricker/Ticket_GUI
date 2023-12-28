@@ -33,7 +33,7 @@ class mySettings():
    def saveSettings(self):
       if self.settingsAvailable:
          with open(self.path, 'w') as outfile:
-            json.dump(self.settings, outfile)
+            json.dump(self.settings, outfile, indent=4)
 
    def createSettings(self, path):
       self.path = path
@@ -60,5 +60,5 @@ class mySettings():
                         }
                      }
       with open(path, 'w') as outfile:
-         json.dump(newSettings, outfile)
+         json.dump(newSettings, outfile, indent=4)
       self.openSettings(path)
