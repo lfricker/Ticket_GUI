@@ -30,7 +30,6 @@ class myMain(Ui_MainWindow):
       self.creator.setDate("00.00.")
       self.dataBrowser = leoImport()
       self.creator.setCardsPerPage(2,6)
-      self.empty_seats = 0
       self.full_seats  = 0
       self.extra_seats = 0
       self.currentSetting = "name"
@@ -75,10 +74,10 @@ class myMain(Ui_MainWindow):
          self.creator.setDate(self.dataBrowser.getDate())
 
          # collect the ammount of total and empty tickets
-         self.te_leer.setText(str(self.dataBrowser.getEmptySeats()))
-         self.empty_seats = self.dataBrowser.getEmptySeats()
-         self.tb_anzahl.setText(str(self.dataBrowser.getFullSeats()))
-         self.full_seats  = self.dataBrowser.getFullSeats()
+         self.te_leer.setText("-")
+         self.te_leer.setEnabled(False)
+         self.tb_anzahl.setText(str(self.dataBrowser.getTicketCnt()))
+         self.full_seats  = self.dataBrowser.getTicketCnt()
 
    def pb_template_clicked(self):
       print("pb_template_clicked")
@@ -119,27 +118,24 @@ class myMain(Ui_MainWindow):
             self.update_status("Reading")
             self.extra_seats = int(self.te_bus.text())
             print("Besetzt: ", self.full_seats)
-            print("Frei: "   , self.empty_seats)
             print("Blanco: " , self.extra_seats)
             self.creator.setCardsPerPage(int(self.te_x.text()), int(self.te_y.text()))
 
             # create the tickets
             tickets = []
-            for i in range(self.empty_seats + self.full_seats):
+            for i in range(self.full_seats):
                tickets.append(self.creator.createCard(self.dataBrowser.getCustomer(i)))
-               self.update_status(("Creating\n" + str(i) + " of " + str(self.empty_seats + self.full_seats)))
+               self.update_status(("Creating\n" + str(i) + " of " + str(self.full_seats)))
+
             for i in range(self.extra_seats):
                tickets.append(self.creator.createBlanco())
                self.update_status(("Creating\n" + str(i) + " of " + str(self.extra_seats)))
+
             self.update_status("Storing")
 
             # save the tickets
             self.creator.createOutput(tickets, fname[0])
             self.update_status("Done")
-
-            for t in tickets:
-               t.close()
-            del tickets[:]
 
    def pb_dir_clicked(self, axis, dir):
       print("pb clicked with ", axis, dir)

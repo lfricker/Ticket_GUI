@@ -3,32 +3,33 @@ import re
 import pandas as pd
 
 
-class loadTicketLeoExport():
+class loadTicketLeoExport:
 
    def __init__(self):
       self.exportAvailable = False
 
    def openExport(self, path):
-      if self.exportAvailable == False:
-         self.exportAvailable = True
-      # get the date from the excel
-      head = pd.read_excel (path, sheet_name=0).columns[0]
-      self.date = str(re.findall("\d{2}.\d{2}.\d{4}", head)[0])
+      try:
+         # get the date from the excel sheet
+         # load the file with pandas to only extract the first row
+         df = pd.read_excel (path, sheet_name=0).columns[0]
+         self.date = str(re.findall("\d{2}.\d{2}.\d{4}", df)[0])
 
-      # load excle file. Cut of the first two lines, not needed
-      ex = pd.read_excel (path, sheet_name=0, skiprows=2)
-      # convert to usable list... excel is... 'special'
-      prename = list(ex['Vorname'])
-      surname = list(ex['Nachname'])
-      seat    = list(ex['Sitznummer'])
+         # load excle file. Cut of the first two lines, because our indexes are in the third line
+         df = pd.read_excel (path, sheet_name=0, skiprows=2)
 
-      self.customers = []
-      for i in range(len(seat)):
-         name = str(surname[i]) + " " + str(prename[i])
-         if name == "nan nan":
-            name = ""
-         else:
-            self.customers.append((seat[i], name))
+         self.customers = []
+         # interate the df and create the customers
+         for idx, row in df.iterrows():
+            if pd.isna(row['Nachname']): # if there is no surname skip the entry
+               continue
+            name = row['Vorname'] + " " + row['Nachname']
+            self.customers.append((row['Sitznummer'], name))
+
+         self.exportAvailable = True # if the parsing was successful the export can be used
+      except Exception as e:
+         print(type(e), e)
+         self.exportAvailable = False # if something went wrong mark as not available
 
 
    def getDate(self):
@@ -37,7 +38,7 @@ class loadTicketLeoExport():
       else:
          return "00.00."
 
-   def getFullSeats(self):
+   def getTicketCnt(self):
       if self.exportAvailable:
          full_seats = 0
          for single in self.customers:
@@ -47,19 +48,24 @@ class loadTicketLeoExport():
       else:
          return 0
 
-   def getEmptySeats(self):
-      if self.exportAvailable:
-         empty_seats = 0
-         for single in self.customers:
-            if single[1] == "":
-               empty_seats = empty_seats + 1
-         return empty_seats
-      else:
-         return -1
-
    def getCustomer(self, index):
       if self.exportAvailable:
-         return self.customers[index]
+         try:
+            return self.customers[index]
+         except IndexError as e:
+            print("Customer selection out of range")
+            return None
       else:
          return ("", 0)
 
+
+
+if __name__ == "__main__":
+   import os
+   sample_path = os.path.join(os.getcwd(), "Samples", "Das-Klassentreffen.xlsx")
+
+   loader = loadTicketLeoExport()
+   loader.openExport(sample_path)
+
+   print(loader.getTicketCnt())
+   print(loader.getDate())

@@ -1,5 +1,6 @@
 from PIL import Image, ImageFont, ImageDraw, ImageOps
 from PIL.ImageQt import ImageQt
+import math
 
 from mySettings import mySettings
 
@@ -73,10 +74,7 @@ class ticketGenerator():
       pages = []
       # get page cnt
       pages_total = len(tickets) / (self.x_cards * self.y_cards)
-      if(pages_total - int(pages_total) > 0.0):
-         pages_total = int(pages_total) + 1
-      else:
-         pages_total = int(pages_total)
+      pages_total = math.ceil(pages_total)
 
       for p in range(pages_total):
          pages.append(Image.new('RGB', (self.width, self.height), (255, 255, 255)))
@@ -94,6 +92,11 @@ class ticketGenerator():
       # save output to pdf
       pages[0].save(path, save_all=True, append_images=pages[1:], dpi=(300,300))
 
+      # close memory intensive objects
       for p in pages:
          p.close()
       del pages[:]
+
+      for t in tickets:
+         t.close()
+      del tickets[:]
