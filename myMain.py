@@ -134,8 +134,11 @@ class myMain(Ui_MainWindow):
             self.update_status("Storing")
 
             # save the tickets
-            self.creator.createOutput(tickets, fname[0])
-            self.update_status("Done")
+            try:
+               self.creator.createOutput(tickets, fname[0])
+               self.update_status("Done")
+            except Exception:
+               self.update_status("Error")
 
    def pb_dir_clicked(self, axis, dir):
       print("pb clicked with ", axis, dir)

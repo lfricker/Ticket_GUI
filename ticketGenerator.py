@@ -70,24 +70,31 @@ class ticketGenerator():
       editable = ImageDraw.Draw(card)
       return card
 
+   # change this function, so that all tickets get placed in stacks instead of on one sheet.
+   # therefore place one should be on page one , place 2 on page 2 and so on.
+
+   # if the sorting should be by page, only switch up that the page counter is the outermost loop
    def createOutput(self, tickets, path):
       pages = []
       # get page cnt
       pages_total = len(tickets) / (self.x_cards * self.y_cards)
       pages_total = math.ceil(pages_total)
 
+      # create all pages
       for p in range(pages_total):
          pages.append(Image.new('RGB', (self.width, self.height), (255, 255, 255)))
-         # save to pages
+
+      current_card = 0
+      for y in range(self.y_cards):
          for x in range(self.x_cards):
-            for y in range(self.y_cards):
-               # add Card( card, (xpos, ypos))
-               current_x = int(x * self.x_spacing)
-               current_y = int(y * self.y_spacing)
-               current_card = p * self.x_cards * self.y_cards + x * self.y_cards + y
+            current_x = int(x * self.x_spacing)
+            current_y = int(y * self.y_spacing)
+            for p in range(pages_total):
+               # save to pages
                if current_card < len(tickets):
                   print("cardNo: ", current_card, "  p: ", p, "  x: ", x, "  y: ", y)
                   pages[p].paste(tickets[current_card], (current_x, current_y), tickets[current_card])
+                  current_card += 1
 
       # save output to pdf
       pages[0].save(path, save_all=True, append_images=pages[1:], dpi=(300,300))

@@ -24,7 +24,11 @@ class loadTicketLeoExport:
             if pd.isna(row['Nachname']): # if there is no surname skip the entry
                continue
             name = row['Vorname'] + " " + row['Nachname']
-            self.customers.append((row['Sitznummer'], name))
+            self.customers.append((row['Sitznummer'], name, row['Nachname']))
+
+         # sort the list by name to get better sorting when creating print tickets
+         # here is determined in which order the tickets will be printed later. So sort carefully
+         self.customers = sorted(self.customers, key=lambda x : x[2])
 
          self.exportAvailable = True # if the parsing was successful the export can be used
       except Exception as e:
