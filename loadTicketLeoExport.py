@@ -23,7 +23,11 @@ class loadTicketLeoExport:
          for idx, row in df.iterrows():
             if pd.isna(row['Nachname']): # if there is no surname skip the entry
                continue
-            name = row['Vorname'] + " " + row['Nachname']
+            # check if a prename is present. If not only use the surename
+            if pd.isna(row['Vorname']):
+               name = row['Nachname']
+            else:
+               name = row['Vorname'] + " " + row['Nachname']
             self.customers.append((row['Sitznummer'], name, row['Nachname']))
 
          # sort the list by name to get better sorting when creating print tickets
