@@ -10,6 +10,7 @@
 
 
 from mainWindow import Ui_MainWindow
+from myConfig import myConfig
 from mySettings import mySettings
 from loadTicketLeoExport import loadTicketLeoExport as leoImport
 from ticketGenerator import ticketGenerator
@@ -25,6 +26,7 @@ class myMain(Ui_MainWindow):
    def __init__(self):
       self.cwd = os.getcwd()
       super(myMain, self).__init__()
+      self.app_config = myConfig()
       self.settings = mySettings()
       self.creator = ticketGenerator()
       self.creator.setDate("00.00.")
@@ -36,9 +38,7 @@ class myMain(Ui_MainWindow):
       self.dataAvailable = False
       self.templateAvailable = False
       self.settingsAvailable = False
-      self.init()
 
-   def init(self):
       self.app = QtWidgets.QApplication(sys.argv)
       self.MainWindow = QtWidgets.QMainWindow()
       self.setupUi(self.MainWindow)
@@ -56,21 +56,24 @@ class myMain(Ui_MainWindow):
       self.pb_rotate.clicked.connect(lambda state, axis = "r", dir = "add" : self.pb_dir_clicked(axis, dir))
       self.list_toEdit.itemClicked.connect(self.selection_changed)
 
+      # check if default values are present. If so try to load them
+      self.config = self.app_config.get_config()
+      if 'input' in self.config.keys():
+         self.input_updated(self.config['input'])
+      if 'template' in self.config.keys():
+         self.template_updated(self.config['template'])
+      if 'outline' in self.config.keys():
+         self.outline_updated(self.config['outline'])
+
       # show the window
       self.MainWindow.show()
       sys.exit(self.app.exec_())
 
-   def pb_input_clicked(self):
-      print("pb_input_clicked")
-
-      # get path to the ticketleo export file
-      fname = QFileDialog.getOpenFileName(self.MainWindow, 'Open File', os.path.join(self.cwd, "Samples"), 'Excel Files (*.xlsx)')
-
-      if fname[0] != '':
-         self.dataAvailable = True
-         self.te_input.setText(fname[0])
+   def input_updated(self, file):
+      try:
+         self.te_input.setText(file)
          # tell the data browser where to read the file contents
-         self.dataBrowser.openExport(fname[0])
+         self.dataBrowser.openExport(file)
          self.creator.setDate(self.dataBrowser.getDate())
 
          # collect the ammount of total and empty tickets
@@ -78,24 +81,56 @@ class myMain(Ui_MainWindow):
          self.te_leer.setEnabled(False)
          self.tb_anzahl.setText(str(self.dataBrowser.getTicketCnt()))
          self.full_seats  = self.dataBrowser.getTicketCnt()
+         self.update_preview()
+         self.config['input'] = file
+         self.app_config.set_config(self.config)
+         self.dataAvailable = True
+      except Exception as e:
+         print("Update input failed:")
+         print(e)
+
+   def pb_input_clicked(self):
+      print("pb_input_clicked")
+      # get path to the ticketleo export file
+      fname = QFileDialog.getOpenFileName(self.MainWindow, 'Open File', os.path.join(self.cwd, "Samples"), 'Excel Files (*.xlsx)')
+      if fname[0] != '':
+         self.input_updated(fname[0])
+
+   def template_updated(self, file):
+      try:
+         self.te_template.setText(file)
+         self.creator.setBaseImage(file)
+         self.update_preview()
+         self.config['template'] = file
+         self.app_config.set_config(self.config)
+         self.templateAvailable = True
+      except Exception as e:
+         print("Update template failed:")
+         print(e)
 
    def pb_template_clicked(self):
       print("pb_template_clicked")
       fname = QFileDialog.getOpenFileName(self.MainWindow, 'Open File', os.path.join(self.cwd,"Samples"), 'PNG (*.png)')
       if fname[0] != '':
-         self.templateAvailable = True
-         self.te_template.setText(fname[0])
-         self.creator.setBaseImage(fname[0])
+         self.template_updated(fname[0])
+
+   def outline_updated(self, file):
+      try:
+         self.te_output.setText(file)
+         self.settings.openSettings(file)
+         self.creator.setPositions(self.settings)
          self.update_preview()
+         self.config['outline'] = file
+         self.app_config.set_config(self.config)
+         self.settingsAvailable = True
+      except Exception as e:
+         print("Update outline failed:")
+         print(e)
 
    def pb_outline_clicked(self):
       fname = QFileDialog.getOpenFileName(self.MainWindow, 'Open File', os.path.join(self.cwd, "Samples"), 'Settings (*.json)')
       if fname[0] != '':
-         self.settingsAvailable = True
-         self.te_output.setText(fname[0])
-         self.settings.openSettings(fname[0])
-         self.creator.setPositions(self.settings)
-         self.update_preview()
+         self.outline_updated(fname[0])
 
    def pb_new_outline_clicked(self):
       print("pb_new_outline_clicked clicked")
