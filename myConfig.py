@@ -11,11 +11,11 @@ import os
 class myConfig:
     def __init__(self):
         parent_path = pathlib.Path(__file__).parent.resolve()
-        self.__path = os.path.join(parent_path, "config.json")
+        self.__path = os.path.join(parent_path, "config/config.json")
 
     def get_config(self):
         try:
-            with open(self.__path, 'r', encoding='utf-8') as file:
+            with open(self.__path, "r", encoding="utf-8") as file:
                 config_data = json.load(file)
             return config_data
         except FileNotFoundError:
@@ -24,7 +24,7 @@ class myConfig:
 
     def set_config(self, config):
         try:
-            with open(self.__path, 'w', encoding='utf-8') as file:
+            with open(self.__path, "w", encoding="utf-8") as file:
                 json.dump(config, file, indent=4)
             print(f"Configurations successfully saved to '{self.__path}'.")
         except Exception as e:

@@ -15,7 +15,9 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(980, 679)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
@@ -23,7 +25,11 @@ class Ui_MainWindow(object):
         MainWindow.setMinimumSize(QtCore.QSize(500, 400))
         MainWindow.setMaximumSize(QtCore.QSize(1100, 800))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("../../../InkscapeWorkspace/TheaterLogo_icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(
+            QtGui.QPixmap("../../../InkscapeWorkspace/TheaterLogo_icon.png"),
+            QtGui.QIcon.Normal,
+            QtGui.QIcon.Off,
+        )
         MainWindow.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -68,16 +74,22 @@ class Ui_MainWindow(object):
         self.te_output = QtWidgets.QLabel(self.formLayoutWidget)
         self.te_output.setObjectName("te_output")
         self.gridLayout_2.addWidget(self.te_output, 2, 0, 1, 1)
-        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem = QtWidgets.QSpacerItem(
+            40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum
+        )
         self.gridLayout_2.addItem(spacerItem, 3, 0, 1, 1)
         self.gridLayout_5.addLayout(self.gridLayout_2, 0, 0, 1, 3)
         self.ticket_preview = QtWidgets.QLabel(self.formLayoutWidget)
         self.ticket_preview.setText("")
-        self.ticket_preview.setPixmap(QtGui.QPixmap("../Theater/Ticket_Generator/input/ticketImage.png"))
+        self.ticket_preview.setPixmap(
+            QtGui.QPixmap("../Theater/Ticket_Generator/input/ticketImage.png")
+        )
         self.ticket_preview.setScaledContents(True)
         self.ticket_preview.setObjectName("ticket_preview")
         self.gridLayout_5.addWidget(self.ticket_preview, 3, 2, 1, 1)
-        spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem1 = QtWidgets.QSpacerItem(
+            20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding
+        )
         self.gridLayout_5.addItem(spacerItem1, 3, 1, 1, 1)
         self.gridLayout = QtWidgets.QGridLayout()
         self.gridLayout.setObjectName("gridLayout")
@@ -90,7 +102,9 @@ class Ui_MainWindow(object):
         self.tb_anzahl = QtWidgets.QLabel(self.formLayoutWidget)
         self.tb_anzahl.setObjectName("tb_anzahl")
         self.gridLayout.addWidget(self.tb_anzahl, 1, 2, 1, 1)
-        spacerItem2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem2 = QtWidgets.QSpacerItem(
+            20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding
+        )
         self.gridLayout.addItem(spacerItem2, 0, 0, 1, 1)
         self.pb_start = QtWidgets.QPushButton(self.formLayoutWidget)
         font = QtGui.QFont()
@@ -117,7 +131,9 @@ class Ui_MainWindow(object):
         self.te_bus.setObjectName("te_bus")
         self.gridLayout.addWidget(self.te_bus, 3, 2, 1, 1)
         self.l_anzahl = QtWidgets.QLabel(self.formLayoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.l_anzahl.sizePolicy().hasHeightForWidth())
@@ -127,7 +143,9 @@ class Ui_MainWindow(object):
         self.l_anzahl.setFont(font)
         self.l_anzahl.setObjectName("l_anzahl")
         self.gridLayout.addWidget(self.l_anzahl, 1, 0, 1, 1)
-        spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem3 = QtWidgets.QSpacerItem(
+            40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum
+        )
         self.gridLayout.addItem(spacerItem3, 1, 3, 1, 1)
         self.gridLayout_5.addLayout(self.gridLayout, 3, 0, 1, 1)
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
@@ -152,12 +170,16 @@ class Ui_MainWindow(object):
         self.te_x = QtWidgets.QLineEdit(self.formLayoutWidget)
         self.te_x.setObjectName("te_x")
         self.gridLayout_3.addWidget(self.te_x, 0, 1, 1, 1)
-        spacerItem4 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem4 = QtWidgets.QSpacerItem(
+            20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding
+        )
         self.gridLayout_3.addItem(spacerItem4, 2, 0, 1, 1)
         self.horizontalLayout_5.addLayout(self.gridLayout_3)
         self.gridLayout_4 = QtWidgets.QGridLayout()
         self.gridLayout_4.setObjectName("gridLayout_4")
-        spacerItem5 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem5 = QtWidgets.QSpacerItem(
+            20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding
+        )
         self.gridLayout_4.addItem(spacerItem5, 3, 2, 1, 1)
         self.pb_down = QtWidgets.QPushButton(self.formLayoutWidget)
         self.pb_down.setObjectName("pb_down")
@@ -177,13 +199,19 @@ class Ui_MainWindow(object):
         self.pb_left = QtWidgets.QPushButton(self.formLayoutWidget)
         self.pb_left.setObjectName("pb_left")
         self.gridLayout_4.addWidget(self.pb_left, 1, 1, 1, 1)
-        spacerItem6 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem6 = QtWidgets.QSpacerItem(
+            40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum
+        )
         self.gridLayout_4.addItem(spacerItem6, 1, 0, 1, 1)
-        spacerItem7 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem7 = QtWidgets.QSpacerItem(
+            40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum
+        )
         self.gridLayout_4.addItem(spacerItem7, 1, 4, 1, 1)
         self.horizontalLayout_5.addLayout(self.gridLayout_4)
         self.list_toEdit = QtWidgets.QListWidget(self.formLayoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.list_toEdit.sizePolicy().hasHeightForWidth())
@@ -200,7 +228,9 @@ class Ui_MainWindow(object):
         self.list_toEdit.addItem(item)
         self.horizontalLayout_5.addWidget(self.list_toEdit)
         self.gridLayout_5.addLayout(self.horizontalLayout_5, 1, 0, 1, 3)
-        spacerItem8 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem8 = QtWidgets.QSpacerItem(
+            40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum
+        )
         self.gridLayout_5.addItem(spacerItem8, 2, 2, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
