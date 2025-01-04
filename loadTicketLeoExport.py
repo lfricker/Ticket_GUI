@@ -28,20 +28,25 @@ class loadTicketLeoExport:
                     name = row["Nachname"]
                 else:
                     name = row["Vorname"] + " " + row["Nachname"]
-                self.customers.append((row["Sitznummer"], name, row["Nachname"]))
+
+                # create the customer as a dictionary for easy access to all fields
+                customer = {}
+                customer["place"] = row["Sitznummer"]
+                customer["name"] = name
+
+                self.customers.append(customer)
 
             # sort the list by name to get better sorting when creating print tickets
             # here is determined in which order the tickets will be printed later. So sort carefully
-            self.customers = sorted(self.customers, key=lambda x: x[2])
+            self.customers = sorted(self.customers, key=lambda x: x["name"])
 
             self.exportAvailable = (
                 True  # if the parsing was successful the export can be used
             )
         except Exception as e:
+            # if something went wrong mark as not available
             print(type(e), e)
-            self.exportAvailable = (
-                False  # if something went wrong mark as not available
-            )
+            self.exportAvailable = False
 
     def getDate(self):
         if self.exportAvailable:
@@ -51,11 +56,7 @@ class loadTicketLeoExport:
 
     def getTicketCnt(self):
         if self.exportAvailable:
-            full_seats = 0
-            for single in self.customers:
-                if single[1] != "":
-                    full_seats = full_seats + 1
-            return full_seats
+            return len(self.customers)
         else:
             return 0
 

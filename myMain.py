@@ -244,7 +244,8 @@ class myMain(Ui_MainWindow):
     def update_preview(self):
         if self.settingsAvailable == True and self.templateAvailable == True:
             self.creator.setPositions(self.settings)
-            template = self.creator.createCard(("000", "Max Musterman"))
+            dummy_customer = {"name": "Max Mustermann", "place": "000"}
+            template = self.creator.createCard(dummy_customer)
             scaleFactor = template.width / 500
             # convert the picture to pixmap and resize the label
             qim = ImageQt(template)

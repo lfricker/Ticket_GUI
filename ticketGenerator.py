@@ -28,25 +28,25 @@ class ticketGenerator:
         self.date = date
 
     def setPositions(self, positions):
-        self.namePos = (
+        self.namePosition = (
             int(positions.getItemValue("positionen")["name"]["x"]) * self.dpiCorrection,
             int(positions.getItemValue("positionen")["name"]["y"]) * self.dpiCorrection,
         )
-        self.platzPos = (
+        self.platzPosition = (
             int(positions.getItemValue("positionen")["platz"]["x"])
             * self.dpiCorrection,
             int(positions.getItemValue("positionen")["platz"]["y"])
             * self.dpiCorrection,
         )
-        self.datePos = (
+        self.datePosition = (
             int(positions.getItemValue("positionen")["datum"]["x"])
             * self.dpiCorrection,
             int(positions.getItemValue("positionen")["datum"]["y"])
             * self.dpiCorrection,
         )
-        self.nameRot = int(positions.getItemValue("positionen")["name"]["r"])
-        self.platzRot = int(positions.getItemValue("positionen")["platz"]["r"])
-        self.dateRot = int(positions.getItemValue("positionen")["datum"]["r"])
+        self.nameRotation = int(positions.getItemValue("positionen")["name"]["r"])
+        self.platzRotation = int(positions.getItemValue("positionen")["platz"]["r"])
+        self.dateRotation = int(positions.getItemValue("positionen")["datum"]["r"])
 
     def setBaseImage(self, path_to_img):
         template = Image.open(path_to_img)
@@ -72,23 +72,30 @@ class ticketGenerator:
         card = Image.open(self.path_to_template)
         editable = ImageDraw.Draw(card)
         # add the data to the ticket and return it
-        editable.text(self.namePos, str(customer[1]), self.black, font=self.font)
-        editable.text(self.platzPos, str(customer[0]), self.black, font=self.font)
+        editable.text(
+            self.namePosition, str(customer["name"]), self.black, font=self.font
+        )
+        editable.text(
+            self.platzPosition, str(customer["place"]), self.black, font=self.font
+        )
 
         self.__add_attribute(
             card=card,
-            value=str(customer[1]),
-            position=self.namePos,
-            rotation=self.nameRot,
+            value=str(customer["name"]),
+            position=self.namePosition,
+            rotation=self.nameRotation,
         )
         self.__add_attribute(
             card=card,
-            value=str(customer[0]),
-            position=self.platzPos,
-            rotation=self.platzRot,
+            value=str(customer["place"]),
+            position=self.platzPosition,
+            rotation=self.platzRotation,
         )
         self.__add_attribute(
-            card=card, value=self.date, position=self.datePos, rotation=self.dateRot
+            card=card,
+            value=self.date,
+            position=self.datePosition,
+            rotation=self.dateRotation,
         )
         return card
 
