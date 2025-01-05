@@ -42,9 +42,9 @@ class mySettings:
             "veranstalter": "",
             "veranstaltung": "",
             "positionen": {
-                "name": {"x": 0, "y": 0, "r": 0},
-                "platz": {"x": 0, "y": 0, "r": 0},
-                "datum": {"x": 0, "y": 0, "r": 0},
+                "name": {"x": 0, "y": 0, "r": 0, "c": False},
+                "platz": {"x": 0, "y": 0, "r": 0, "c": False},
+                "datum": {"x": 0, "y": 0, "r": 0, "c": False},
             },
         }
         with open(path, "w") as outfile:

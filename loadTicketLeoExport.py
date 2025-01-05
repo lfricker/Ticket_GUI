@@ -33,12 +33,13 @@ class loadTicketLeoExport:
                 customer = {}
                 customer["place"] = row["Sitznummer"]
                 customer["name"] = name
+                customer["sortkey"] = row["Nachname"]
 
                 self.customers.append(customer)
 
             # sort the list by name to get better sorting when creating print tickets
             # here is determined in which order the tickets will be printed later. So sort carefully
-            self.customers = sorted(self.customers, key=lambda x: x["name"])
+            self.customers = sorted(self.customers, key=lambda x: x["sortkey"])
 
             self.exportAvailable = (
                 True  # if the parsing was successful the export can be used

@@ -242,16 +242,16 @@ class myMain(Ui_MainWindow):
             print(type(e), e)
 
     def update_preview(self):
-        if self.settingsAvailable == True and self.templateAvailable == True:
+        if (self.settingsAvailable == True) and (self.templateAvailable == True):
             self.creator.setPositions(self.settings)
-            dummy_customer = {"name": "Max Mustermann", "place": "000"}
+            dummy_customer = {"name": "Mary Mustermann", "place": "000"}
             template = self.creator.createCard(dummy_customer)
             scaleFactor = template.width / 500
             # convert the picture to pixmap and resize the label
             qim = ImageQt(template)
             pix = QtGui.QPixmap.fromImage(qim)
             self.ticket_preview.resize(
-                template.width / scaleFactor, template.height / scaleFactor
+                int(template.width / scaleFactor), int(template.height / scaleFactor)
             )
             self.ticket_preview.setPixmap(QtGui.QPixmap(pix))
 

@@ -26,7 +26,7 @@ class Ui_MainWindow(object):
         MainWindow.setMaximumSize(QtCore.QSize(1100, 800))
         icon = QtGui.QIcon()
         icon.addPixmap(
-            QtGui.QPixmap("../../../InkscapeWorkspace/TheaterLogo_icon.png"),
+            QtGui.QPixmap("config/TheaterLogo_icon.ico"),
             QtGui.QIcon.Normal,
             QtGui.QIcon.Off,
         )
