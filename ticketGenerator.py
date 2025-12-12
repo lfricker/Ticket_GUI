@@ -109,6 +109,8 @@ class ticketGenerator:
         card = Image.open(self.path_to_template)
 
         # add the data to the ticket and return it
+        # set the font size for the base attributes
+        self.font = ImageFont.truetype("arial", 14 * self.dpiCorrection)
         self.__add_attribute(
             card=card,
             text=str(customer["name"]),
@@ -116,19 +118,23 @@ class ticketGenerator:
             rotation=self.nameRotation,
             centered=self.nameCentered,
         )
-        self.__add_attribute(
-            card=card,
-            text=str(customer["place"]),
-            position=self.platzPosition,
-            rotation=self.platzRotation,
-            centered=self.platzCentered,
-        )
+        # set the font size for the date
+        self.font = ImageFont.truetype("arial", 9 * self.dpiCorrection)
         self.__add_attribute(
             card=card,
             text=self.date,
             position=self.datePosition,
             rotation=self.dateRotation,
             centered=self.dateCentered,
+        )
+        # increase the font size for the place to make it better readable
+        self.font = ImageFont.truetype("arial", 20 * self.dpiCorrection)
+        self.__add_attribute(
+            card=card,
+            text=str(customer["place"]),
+            position=self.platzPosition,
+            rotation=self.platzRotation,
+            centered=self.platzCentered,
         )
         return card
 
