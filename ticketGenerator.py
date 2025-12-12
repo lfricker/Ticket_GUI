@@ -13,7 +13,16 @@ class ticketGenerator:
         self.y_cards = 1
         # need to correct from the dpi of the template (300) to the dpi assumed by pil (72)
         self.dpiCorrection = int(300 / 72)
-        self.font = ImageFont.truetype("arial", 14 * self.dpiCorrection)
+        self.default_fonts = {
+            "name": {"family": "arial", "size": 14, "file": ""},
+            "datum": {"family": "arial", "size": 9, "file": ""},
+            "platz": {"family": "arial", "size": 20, "file": ""},
+        }
+        self.font_settings = {k: v.copy() for k, v in self.default_fonts.items()}
+        self.font = ImageFont.truetype(
+            self.default_fonts["name"]["family"],
+            self.default_fonts["name"]["size"] * self.dpiCorrection,
+        )
         self.black = (0, 0, 0)
         self.path_to_template = ""
 
@@ -57,6 +66,7 @@ class ticketGenerator:
         )
         self.dateRotation = int(dateSettings["r"])
         self.dateCentered = bool(dateSettings["c"])
+        self.__read_fonts(settings)
 
     def setBaseImage(self, path_to_img):
         template = Image.open(path_to_img)
@@ -110,7 +120,7 @@ class ticketGenerator:
 
         # add the data to the ticket and return it
         # set the font size for the base attributes
-        self.font = ImageFont.truetype("arial", 14 * self.dpiCorrection)
+        self.font = self.__load_font("name")
         self.__add_attribute(
             card=card,
             text=str(customer["name"]),
@@ -119,7 +129,7 @@ class ticketGenerator:
             centered=self.nameCentered,
         )
         # set the font size for the date
-        self.font = ImageFont.truetype("arial", 9 * self.dpiCorrection)
+        self.font = self.__load_font("datum")
         self.__add_attribute(
             card=card,
             text=self.date,
@@ -128,7 +138,7 @@ class ticketGenerator:
             centered=self.dateCentered,
         )
         # increase the font size for the place to make it better readable
-        self.font = ImageFont.truetype("arial", 20 * self.dpiCorrection)
+        self.font = self.__load_font("platz")
         self.__add_attribute(
             card=card,
             text=str(customer["place"]),
@@ -187,3 +197,39 @@ class ticketGenerator:
         for t in tickets:
             t.close()
         del tickets[:]
+
+    def __read_fonts(self, settings):
+        font_settings = settings.getItemValue("fonts")
+        # reset to defaults then overwrite with user settings
+        self.font_settings = {k: v.copy() for k, v in self.default_fonts.items()}
+        if font_settings is None:
+            return
+        for key, default in self.default_fonts.items():
+            if key in font_settings:
+                entry = font_settings[key]
+                self.font_settings[key]["family"] = entry.get("family", default["family"])
+                try:
+                    self.font_settings[key]["size"] = int(
+                        entry.get("size", default["size"])
+                    )
+                except (TypeError, ValueError):
+                    self.font_settings[key]["size"] = default["size"]
+                self.font_settings[key]["file"] = entry.get("file", default["file"])
+
+    def __load_font(self, attribute):
+        font_entry = self.font_settings.get(attribute, self.default_fonts["name"])
+        family = font_entry.get("family", self.default_fonts["name"]["family"])
+        size = int(font_entry.get("size", self.default_fonts["name"]["size"]))
+        font_file = font_entry.get("file", "")
+        # prefer explicit file path if provided
+        if font_file:
+            try:
+                return ImageFont.truetype(font_file, size * self.dpiCorrection)
+            except OSError:
+                # if provided file fails, continue with family fallback
+                pass
+        try:
+            return ImageFont.truetype(family, size * self.dpiCorrection)
+        except OSError:
+            # fall back to arial if custom font is missing
+            return ImageFont.truetype("arial", size * self.dpiCorrection)

@@ -43,6 +43,15 @@ class myMain(Ui_MainWindow):
         self.MainWindow = QtWidgets.QMainWindow()
         self.setupUi(self.MainWindow)
 
+        # add font selection controls to the existing layout
+        self.l_font = QtWidgets.QLabel("Font: -")
+        font_label_font = QtGui.QFont()
+        font_label_font.setPointSize(12)
+        self.l_font.setFont(font_label_font)
+        self.pb_font = QtWidgets.QPushButton("Font")
+        self.gridLayout_2.addWidget(self.l_font, 4, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.pb_font, 4, 1, 1, 1)
+
         # connect the callbacks to the buttons from the window
         self.pb_input.clicked.connect(self.pb_input_clicked)
         self.pb_template.clicked.connect(self.pb_template_clicked)
@@ -65,6 +74,7 @@ class myMain(Ui_MainWindow):
             lambda state, axis="r", dir="add": self.pb_dir_clicked(axis, dir)
         )
         self.list_toEdit.itemClicked.connect(self.selection_changed)
+        self.pb_font.clicked.connect(self.pb_font_clicked)
 
         # check if default values are present. If so try to load them
         self.config = self.app_config.get_config()
@@ -140,6 +150,7 @@ class myMain(Ui_MainWindow):
             self.settings.openSettings(file)
             self.creator.setPositions(self.settings)
             self.update_preview()
+            self.update_font_label()
             self.config["outline"] = file
             self.app_config.set_config(self.config)
             self.settingsAvailable = True
@@ -172,6 +183,7 @@ class myMain(Ui_MainWindow):
             self.te_output.setText(fname[0])
             self.creator.setPositions(self.settings)
             self.update_preview()
+            self.update_font_label()
 
     def pb_start_clicked(self):
         print("pb_outline_clicked")
@@ -258,11 +270,82 @@ class myMain(Ui_MainWindow):
     def selection_changed(self, item):
         self.currentSetting = item.text()
         print("selected: ", self.currentSetting)
+        self.update_font_label()
 
     def update_status(self, text):
         self.l_status.setText(text)
         self.l_status.adjustSize()
         QApplication.processEvents()
+
+    def pb_font_clicked(self):
+        if not self.settingsAvailable:
+            print("No settings file loaded")
+            return
+
+        current_font = self.__get_current_font()
+        qfont, ok = QtWidgets.QFontDialog.getFont(
+            QtGui.QFont(current_font["family"], current_font["size"]),
+            self.MainWindow,
+            "Schrift auswählen",
+        )
+        if ok:
+            fonts = self.settings.getItemValue("fonts")
+            if fonts == 0 or fonts is None:
+                fonts = {}
+            font_entry = {
+                "family": qfont.family(),
+                "size": qfont.pointSize(),
+                "file": "",
+            }
+            # optionally let the user pick a font file for Pillow
+            pick_file = QtWidgets.QMessageBox.question(
+                self.MainWindow,
+                "Font-Datei wählen?",
+                "Soll eine Schriftdatei (.ttf/.otf) für den PDF-Export gewählt werden?",
+                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                QtWidgets.QMessageBox.No,
+            )
+            if pick_file == QtWidgets.QMessageBox.Yes:
+                fpath, _ = QtWidgets.QFileDialog.getOpenFileName(
+                    self.MainWindow,
+                    "Schriftdatei auswählen",
+                    self.cwd,
+                    "Font Files (*.ttf *.otf)",
+                )
+                if fpath:
+                    font_entry["file"] = fpath
+
+            fonts[self.currentSetting] = font_entry
+            self.settings.setItemValue("fonts", fonts)
+            self.settings.saveSettings()
+            self.creator.setPositions(self.settings)
+            self.update_font_label()
+            self.update_preview()
+
+    def update_font_label(self):
+        try:
+            fonts = self.settings.getItemValue("fonts")
+            if fonts and self.currentSetting in fonts:
+                font_entry = fonts[self.currentSetting]
+                self.l_font.setText(
+                    f"{self.currentSetting}: {font_entry['family']} {font_entry['size']} pt"
+                )
+            else:
+                self.l_font.setText(f"{self.currentSetting}: -")
+        except Exception:
+            self.l_font.setText(f"{self.currentSetting}: -")
+
+    def __get_current_font(self):
+        try:
+            fonts = self.settings.getItemValue("fonts")
+            if fonts and self.currentSetting in fonts:
+                return fonts[self.currentSetting]
+        except Exception:
+            pass
+        # fallback to ticket generator defaults
+        if self.currentSetting in self.creator.default_fonts:
+            return self.creator.default_fonts[self.currentSetting]
+        return {"family": "Arial", "size": 12, "file": ""}
 
 
 myApp = myMain()
